@@ -12,12 +12,25 @@ config_version=5
 
 config/name="godot-the-train"
 config/features=PackedStringArray("4.7", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="uid://bx0vte8iprr2d"
+boot_splash/minimum_display_time=100
 
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[file_customization]
+
+folder_colors={
+"res://assets/": "orange",
+"res://autoload/": "red",
+"res://data/": "teal",
+"res://prefabs/": "purple",
+"res://scenes/": "pink",
+"res://test/": "yellow"
+}
 
 [physics]
 
