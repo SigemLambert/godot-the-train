@@ -11,9 +11,11 @@ config_version=5
 [application]
 
 config/name="godot-the-train"
+run/main_scene="uid://bswlo4dt3vi8a"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/image="uid://bx0vte8iprr2d"
+config/icon="uid://t4ifkab6rpxp"
 boot_splash/minimum_display_time=100
 
 [display]
