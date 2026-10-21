@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://dvnck1bttjf28"]
+
+[ext_resource type="Script" uid="uid://bqv2uswlnbysh" path="res://prefabs/player/player.gd" id="1_sxsrd"]
+[ext_resource type="Script" uid="uid://d3mhsqmrk2450" path="res://prefabs/player/player_camera.gd" id="2_rdx4y"]
+[ext_resource type="Script" uid="uid://4ujwekeh5pf3" path="res://prefabs/player/player_movement.gd" id="2_wv1mm"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_binfn"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_wv1mm"]
+material = SubResource("StandardMaterial3D_binfn")
+size = Vector3(0.3, 0.6, 0.6)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ogq8d"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wv1mm"]
+albedo_color = Color(0, 0, 1, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ogq8d"]
+material = SubResource("StandardMaterial3D_wv1mm")
+
+[node name="Player" type="CharacterBody3D" unique_id=259305785]
+script = ExtResource("1_sxsrd")
+
+[node name="Camera" type="Camera3D" parent="." unique_id=1093383425 node_paths=PackedStringArray("pivot")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 0)
+script = ExtResource("2_rdx4y")
+pivot = NodePath("..")
+
+[node name="Mesh" type="MeshInstance3D" parent="Camera" unique_id=565777528]
+transform = Transform3D(-4.3711385e-08, -4.3711392e-08, -1, -1, -4.371139e-08, 4.371139e-08, -4.3711392e-08, 1, -4.371139e-08, 0, 0, -0.3)
+mesh = SubResource("PrismMesh_wv1mm")
+
+[node name="Collider" type="CollisionShape3D" parent="." unique_id=19613947]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_ogq8d")
+
+[node name="Mesh" type="MeshInstance3D" parent="Collider" unique_id=2093075390]
+mesh = SubResource("CapsuleMesh_ogq8d")
+
+[node name="Controller" type="Node" parent="." unique_id=2038850107 node_paths=PackedStringArray("body")]
+unique_name_in_owner = true
+script = ExtResource("2_wv1mm")
+body = NodePath("..")
+sprint_speed = 10.0
+jump_velocity = 0.0
+acceleration = 25.0
+air_acceleration = 0.0
+friction = 20.0
+air_friction = 20.0
+move_forward_action = "move_forward"
+move_backward_action = "move_backward"
+move_left_action = "move_left"
+move_right_action = "move_right"
+jump_action = ""
+sprint_action = "move_sprint"
