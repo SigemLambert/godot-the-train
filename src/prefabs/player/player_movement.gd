@@ -73,6 +73,7 @@ func handle_movement(delta: float, grounded: bool):
 	var target_speed: float = get_target_speed()
 	var accel: float = acceleration if grounded else air_acceleration
 	
+	cancel_perpendicular_velocity(direction)
 	accelerate(direction, target_speed, accel, delta)
  
  
@@ -92,6 +93,16 @@ func get_movement_direction(input_dir: Vector2) -> Vector3:
 	var forward: Vector3 = -body.basis.z
 	var right: Vector3 = body.basis.x
 	return (forward * input_dir.y + right * input_dir.x).normalized()
+
+
+func cancel_perpendicular_velocity(direction: Vector3):
+	var current_horiz: Vector3 = Vector3(body.velocity.x, 0, body.velocity.z)
+	var parallel: float = current_horiz.dot(direction)
+	var parallel_vel: Vector3 = direction * parallel
+	var perpendicular: Vector3 = current_horiz - parallel_vel
+	
+	body.velocity.x -= perpendicular.x
+	body.velocity.z -= perpendicular.z
 
  
 func get_target_speed() -> float:
