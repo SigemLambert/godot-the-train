@@ -4,10 +4,10 @@ extends Node
 
 
 @export var body: CharacterBody3D
-@export_group("Speed")
-@export var walk_speed: float = 5.0
-@export var sprint_speed: float = 7.5
-@export var jump_velocity: float = 5.0
+@export_group("Speed", "speed")
+@export var speed_walk: float = 5.0
+@export var speed_sprint: float = 7.5
+@export var speed_jump_velocity: float = 5.0
  
 @export_group("Physics")
 @export_subgroup("Acceleration")
@@ -17,14 +17,15 @@ extends Node
 @export var friction: float = 8.0
 @export var air_friction: float = 0.5
  
-@export_group("Controls")
-@export var move_forward_action: String = "ui_up"
-@export var move_backward_action: String = "ui_down"
-@export var move_left_action: String = "ui_left"
-@export var move_right_action: String = "ui_right"
-@export var jump_action: String = "ui_accept"
-@export var sprint_action: String = ""
- 
+@export_group("Controls", "action")
+@export var action_jump: String = "ui_accept"
+@export var action_sprint: String = ""
+@export_subgroup("Move", "action_move")
+@export var action_move_forward: String = "ui_up"
+@export var action_move_backward: String = "ui_down"
+@export var action_move_left: String = "ui_left"
+@export var action_move_right: String = "ui_right"
+
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 var current_friction: float
  
@@ -57,8 +58,8 @@ func apply_gravity(delta: float):
 func handle_jump(grounded: bool):
 	if not grounded:
 		return
-	if jump_action and Input.is_action_just_pressed(jump_action):
-		body.velocity.y = jump_velocity
+	if action_jump and Input.is_action_just_pressed(action_jump):
+		body.velocity.y = speed_jump_velocity
  
  
 func handle_movement(delta: float, grounded: bool):
@@ -72,12 +73,19 @@ func handle_movement(delta: float, grounded: bool):
 	var target_speed: float = get_target_speed()
 	var accel: float = acceleration if grounded else air_acceleration
 	
+	cancel_perpendicular_velocity(direction)
 	accelerate(direction, target_speed, accel, delta)
  
  
 func get_input_direction() -> Vector2:
-	var forward: float = Input.get_action_strength(move_forward_action) - Input.get_action_strength(move_backward_action)
-	var right: float = Input.get_action_strength(move_right_action) - Input.get_action_strength(move_left_action)
+	var forward: float = (
+		(Input.get_action_strength(action_move_forward) if action_move_forward else 0.0) -
+		(Input.get_action_strength(action_move_backward) if action_move_backward else 0.0)
+		)
+	var right: float = (
+		(Input.get_action_strength(action_move_right) if action_move_right else 0.0) -
+		(Input.get_action_strength(action_move_left) if action_move_left else 0.0)
+		)
 	return Vector2(right, forward)
  
  
@@ -86,12 +94,21 @@ func get_movement_direction(input_dir: Vector2) -> Vector3:
 	var right: Vector3 = body.basis.x
 	return (forward * input_dir.y + right * input_dir.x).normalized()
 
+
+func cancel_perpendicular_velocity(direction: Vector3):
+	var current_horiz: Vector3 = Vector3(body.velocity.x, 0, body.velocity.z)
+	var parallel: float = current_horiz.dot(direction)
+	var parallel_vel: Vector3 = direction * parallel
+	var perpendicular: Vector3 = current_horiz - parallel_vel
+	
+	body.velocity.x -= perpendicular.x
+	body.velocity.z -= perpendicular.z
+
  
 func get_target_speed() -> float:
-	if sprint_action and Input.is_action_pressed(sprint_action):
-		return sprint_speed
-	
-	return walk_speed
+	if action_sprint and Input.is_action_pressed(action_sprint):
+		return speed_sprint
+	return speed_walk
  
  
 func accelerate(direction: Vector3, target_speed: float, accel: float, delta: float):
