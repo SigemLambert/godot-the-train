@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://p2ef4aytx5vq"]
+
+[ext_resource type="PackedScene" uid="uid://vttxin3mr3aw" path="res://prefabs/interactable/interactable.tscn" id="1_mrke1"]
+[ext_resource type="Script" uid="uid://bcn8art1pklmn" path="res://prefabs/interactable/rotary_dial/rotary_dial.gd" id="2_i7qdq"]
+
+[node name="Interactable" unique_id=1122555440 instance=ExtResource("1_mrke1")]
+script = ExtResource("2_i7qdq")
+rotation_axis = Vector3(0, -1, 0)
+rotation_sensitivity = 1.0
+rotation_angle_min = -180.0
+rotation_angle_max = 180.0
+output_mode = 0
+output_normalized_range = Vector2(0, 1)
