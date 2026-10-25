@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://vttxin3mr3aw"]
+
+[ext_resource type="Script" uid="uid://co0r4ilcv8p62" path="res://prefabs/interactable/interactable.gd" id="1_2vx2n"]
+
+[node name="Interactable" type="StaticBody3D" unique_id=1122555440]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_2vx2n")
