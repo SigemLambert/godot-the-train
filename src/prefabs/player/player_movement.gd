@@ -4,6 +4,7 @@ extends Node
 
 
 @export var body: CharacterBody3D
+@export var enabled: bool = true
 @export_group("Speed", "speed")
 @export var speed_walk: float = 5.0
 @export var speed_sprint: float = 7.5
@@ -56,13 +57,18 @@ func apply_gravity(delta: float):
  
  
 func handle_jump(grounded: bool):
-	if not grounded:
+	if not grounded or not enabled:
 		return
+	if action_jump and Input.is_action_just_pressed(action_jump):
+		body.velocity.y = speed_jump_velocity
 	if action_jump and Input.is_action_just_pressed(action_jump):
 		body.velocity.y = speed_jump_velocity
  
  
 func handle_movement(delta: float, grounded: bool):
+	if not enabled:
+		return
+	
 	var input_dir: Vector2 = get_input_direction()
 	
 	if input_dir == Vector2.ZERO:
@@ -73,6 +79,7 @@ func handle_movement(delta: float, grounded: bool):
 	var target_speed: float = get_target_speed()
 	var accel: float = acceleration if grounded else air_acceleration
 	
+	cancel_perpendicular_velocity(direction)
 	cancel_perpendicular_velocity(direction)
 	accelerate(direction, target_speed, accel, delta)
  
